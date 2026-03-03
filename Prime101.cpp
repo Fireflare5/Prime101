@@ -178,6 +178,9 @@ inline std::ostream& operator<<(std::ostream& out, const Prime101& v) {
 }
 
 int main() {
+    // 1 millionth prime: 15485863
+    // 10 millionth prime: 179424673
+    // 100 millionth prime: 2038074743 (Warning: May take a long time on slower devices)
     long long limit; // Empty long long int
     std::cout << "Input search range: "; // Prints message to terminal
     std::cin >> limit; // Set limit to user input
