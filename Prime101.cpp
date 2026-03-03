@@ -63,7 +63,7 @@ public:
 
     void Soe(long long n) {
         // Sieve of Eratosthenes
-        primes_.assign(n + 1, 1); // Create a list of 1's (1 = True) with a length of n + 1
+        primes_.assign(n + 1, true); // Create a list of 1's (1 = True) with a length of n + 1
 
         // Loop through all natural numbers less than √n
         for(long long i = 2; i * i <= n; ++i) {
@@ -73,7 +73,7 @@ public:
 
                 // Mark all multiples of primes as not prime
                 for(long long j = i * i; j <= n; j += i) {
-                    primes_[j] = 0;
+                    primes_[j] = false;
                 }
             }
         }
@@ -81,10 +81,10 @@ public:
 
     void Soa(long long n) {
         // Sieve of Atkin
-        primes_.assign(n + 1, 0); // Create a list of 0's (0 = False) with a length of n + 1
+        primes_.assign(n + 1, false); // Create a list of 0's (0 = False) with a length of n + 1
 
-        if(n > 2) primes_[2] = 1; // Mark 2 as prime
-        if(n > 3) primes_[3] = 1; // Mark 3 as prime
+        if(n > 2) primes_[2] = true; // Mark 2 as prime
+        if(n > 3) primes_[3] = true; // Mark 3 as prime
 
         // Loop through all natural numbers less than √n
         for(long long i = 1; i * i <= n; ++i) {
@@ -96,19 +96,19 @@ public:
                 long long k = 4 * i * i + j * j; // n = 4x^2 + y^2
                 // If n is odd, has a remainder of 1 or 5 when divided by 12, and is not a perfect square, then n is prime
                 if(k <= n && (k % 12 == 1 || k % 12 == 5)) {
-                    primes_[k] = (primes_[k] + 1) % 2; // Flip the value of k
+                    primes_[k] = !primes_[k]; // Flip the value of k
                 }
 
                 k = 3 * i * i + j * j; // n = 3x^2 + y^2
                 // If n is odd, has a remainder of 7 when divided by 12, and is not a perfect square, then n is prime
                 if(k <= n && k % 12 == 7) {
-                    primes_[k] = (primes_[k] + 1) % 2; // Flip the value of k
+                    primes_[k] = !primes_[k]; // Flip the value of k
                 }
 
                 k = 3 * i * i - j * j; // n = 3x^2 - y^2
                 // If n is odd, has a remainder of 11 when divided by 12, is not a perfect square, and x > y, then n is prime
                 if(i > j && k <= n && k % 12 == 11) {
-                    primes_[k] = (primes_[k] + 1) % 2; // Flip the value of k
+                    primes_[k] = !primes_[k]; // Flip the value of k
                 }
             }
         }
@@ -119,7 +119,7 @@ public:
 
             // If it is marked as prime mark all its multiples as not prime
             for(long long j = i * i; j <= n; j += i * i) {
-                primes_[j] = 0;
+                primes_[j] = false;
             }
         }
     }
@@ -164,7 +164,7 @@ public:
 private:
     // Variables
     std::string Sieve;
-    std::vector<long long> primes_;
+    std::vector<bool> primes_;
     std::vector<std::thread> clock;
     bool done = false;
 };
