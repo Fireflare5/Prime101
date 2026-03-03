@@ -28,10 +28,21 @@ public:
     // Destructor
     ~Prime101()
     {
+        if(!clock.empty()) {
+            done = true;
+            for(auto& time : clock) {
+                time.join();
+            }
+        }
+    
+    }
+
+    void end_timer() {
         done = true;
         for(auto& time : clock) {
             time.join();
         }
+        clock.erase(clock.begin());
     }
 
     // Prime finding function
@@ -48,7 +59,7 @@ public:
             // Selection determind by the time complexity of each sieve
             if(n < 10000000000LL) {
                 Soe(n);
-            } else if(n > 10000000000LL) {
+            } else {
                 Soa(n);
             }
         }
@@ -143,7 +154,7 @@ public:
                 }
                 std::this_thread::sleep_for(std::chrono::milliseconds(100));
                 std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - start;
-                std::ostream& out = std::cout << "\rRunning... {";
+                std::ostream& out = std::cout << "Running... {";
                 for(int i = 0; i < int(duration.count()) % 13; i++) {
                     out << "▊";
                 }
@@ -151,10 +162,10 @@ public:
                     out << " ";
                 }
                 if(int(duration.count()) % 60 < 10) {
-                    out << "} (" << floor(duration.count() / 60) << ":0" << int(duration.count()) % 60 << ")";
+                    out << "} (" << floor(duration.count() / 60) << ":0" << int(duration.count()) % 60 << ")\r";
                     std::cout.flush();
                 } else {
-                    out << "} (" << floor(duration.count() / 60) << ":" << int(duration.count()) % 60 << ")";
+                    out << "} (" << floor(duration.count() / 60) << ":" << int(duration.count()) % 60 << ")\r";
                     std::cout.flush();
                 }
             }
@@ -182,9 +193,18 @@ int main() {
     // 10 millionth prime: 179424673
     // 100 millionth prime: 2038074743 (Warning: May take a long time on slower devices)
     long long limit; // Empty long long int
+    std::string sieve;
     std::cout << "Input search range: "; // Prints message to terminal
     std::cin >> limit; // Set limit to user input
-    Prime101 prime(limit); // Initalize Prime101 with input(limit)
-    std::cout << prime << "\n"; // Output all found primes
+    std::cout << "Select sieve(soe/soa/auto): ";
+    std::cin >> sieve;
+    Prime101 prime(limit, sieve); // Initalize Prime101 with input(limit)
+    prime.end_timer();
+    std::cout << "Would you like to see a list if the primes found(y/n)? ";
+    std::string yn;
+    std::cin >> yn;
+    if(yn == "y") {
+        std::cout << prime << "\n"; // Output all found primes
+    }
     return 0;
 }
