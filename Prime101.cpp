@@ -4,19 +4,19 @@
 class Prime101
 {
 public:
-    std::vector<long> primes;
-    Prime101(long n) : Sieve("auto") {
-        //timer();
+    std::vector<long long> primes;
+    Prime101(long long n) : Sieve("auto") {
+        timer();
         primes = find_primes(n);
     }
 
-    Prime101(std::string sieve, long n) : Sieve(sieve) {
-        //timer();
+    Prime101(std::string sieve, long long n) : Sieve(sieve) {
+        timer();
         primes = find_primes(n);
     }
 
-    Prime101(long n, std::string sieve) : Sieve(sieve) {
-        //timer();
+    Prime101(long long n, std::string sieve) : Sieve(sieve) {
+        timer();
         primes = find_primes(n);
     }
     ~Prime101()
@@ -26,19 +26,19 @@ public:
             time.join();
         }
     }
-    std::vector<long> find_primes(long n) {
+    std::vector<long long> find_primes(long long n) {
         if(Sieve == "eratosthenes" || Sieve == "sieve of eratosthenes" || Sieve == "soe" || Sieve == "SoE" || Sieve == "SOE" || Sieve == "eratos") {
             Soe(n);
         } else if(Sieve == "Atkin" || Sieve == "sieve of atkin" || Sieve == "soa" || Sieve == "SoA" || Sieve == "SOA" || Sieve == "atkin") {
             Soa(n);
         } else if(Sieve == "auto" || Sieve == "Auto") {
-            if(n < 10000000000L) {
+            if(n < 10000000000LL) {
                 Soe(n);
-            } else if(n > 10000000000L) {
+            } else if(n > 10000000000LL) {
                 Soa(n);
             }
         }
-        for(long i = 2; i <= n; ++i) {
+        for(long long i = 2; i <= n; ++i) {
                 if(primes_[i]) {
                     primes.emplace_back(i);
                 }
@@ -46,25 +46,24 @@ public:
         return primes;
     }
 
-    void Soe(long n) {
+    void Soe(long long n) {
         primes_.assign(n + 1, 1);
-        for(long i = 2; i * i <= n; ++i) {
+        for(long long i = 2; i * i <= n; ++i) {
             if(primes_[i]) {
-                for(long j = i * i; j <= n; j += i) {
+                for(long long j = i * i; j <= n; j += i) {
                     primes_[j] = 0;
                 }
             }
         }
     }
 
-    void Soa(long n) {
+    void Soa(long long n) {
         primes_.assign(n + 1, 0);
         if(n > 2) primes_[2] = 1;
         if(n > 3) primes_[3] = 1;
-        for(long i = 1; i * i <= n; ++i) {
-            std::cout << i << "\n";
-            for(long j = 1; j * j <= n; ++j) {
-                long k = 4 * i * i + j * j;
+        for(long long i = 1; i * i <= n; ++i) {
+            for(long long j = 1; j * j <= n; ++j) {
+                long long k = 4 * i * i + j * j;
                 if(k <= n && (k % 12 == 1 || k % 12 == 5)) {
                     primes_[k] = (primes_[k] + 1) % 2;
                 }
@@ -78,9 +77,9 @@ public:
                 }
             }
         }
-        for(long i = 5; i * i <= n; ++i) {
+        for(long long i = 5; i * i <= n; ++i) {
             if(!primes_[i]) continue;
-            for(long j = i * i; j <= n; j += i * i) {
+            for(long long j = i * i; j <= n; j += i * i) {
                 primes_[j] = 0;
             }
         }
@@ -123,7 +122,7 @@ public:
 
 private:
     std::string Sieve;
-    std::vector<long> primes_;
+    std::vector<long long> primes_;
     std::vector<std::thread> clock;
     bool done = false;
 };
@@ -136,8 +135,10 @@ inline std::ostream& operator<<(std::ostream& out, const Prime101& v) {
 }
 
 int main() {
-    int limit = 1000000000;
-    Prime101 prime(limit,"soa");
+    long long limit;
+    std::cout << "Input search range: ";
+    std::cin >> limit;
+    Prime101 prime(limit);
     std::cout << prime << "\n";
     return 0;
 }
