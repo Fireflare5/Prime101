@@ -98,6 +98,7 @@ public:
                     } else {
                         std::cout << "Complete! (" << floor(duration.count() / 60) << ":" << int(duration.count()) % 60 << ")\n";
                     }
+                    std::cout << primes.size() << " primes found!\n";
                     break;
                 }
                 std::this_thread::sleep_for(std::chrono::milliseconds(100));
