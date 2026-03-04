@@ -10,7 +10,7 @@ public:
     std::vector<long long> primes;
 
     // Setup stuff
-    Prime101(long long n) : Sieve("auto") {
+    Prime101(long long n) : Sieve("Atkin") {
         timer();
         find_primes(n);
     }
@@ -54,14 +54,6 @@ public:
         } else if(Sieve == "Atkin" || Sieve == "sieve of atkin" || Sieve == "soa" || Sieve == "SoA" || Sieve == "SOA" || Sieve == "atkin") {
             // Sieve of Atkin
             Soa(n);
-        } else if(Sieve == "auto" || Sieve == "Auto") {
-            // Automatic sieve selection based on search range
-            // Selection determind by the time complexity of each sieve
-            if(n < 10000000000LL) {
-                Soe(n);
-            } else {
-                Soa(n);
-            }
         }
 
         // Add primes to list of primes
@@ -100,8 +92,9 @@ public:
         // Loop through all natural numbers less than √n
         for(long long i = 1; i * i <= n; ++i) {
 
+            long long l = i % 2 + 1;
             // Nested loop of all natural numbers less than √n
-            for(long long j = 1; j * j <= n; ++j) {
+            for(long long j = 1; j * j <= n; j += 2) {
 
                 // Check #1
                 long long k = 4 * i * i + j * j; // n = 4x^2 + y^2
@@ -110,18 +103,20 @@ public:
                     primes_[k] = !primes_[k]; // Flip the value of k
                 }
 
-                k = 3 * i * i + j * j; // n = 3x^2 + y^2
+                k = 3 * i * i + l * l; // n = 3x^2 + y^2
                 // If n is odd, has a remainder of 7 when divided by 12, and is not a perfect square, then n is prime
                 if(k <= n && k % 12 == 7) {
                     primes_[k] = !primes_[k]; // Flip the value of k
                 }
 
-                k = 3 * i * i - j * j; // n = 3x^2 - y^2
+                k = 3 * i * i - l * l; // n = 3x^2 - y^2
                 // If n is odd, has a remainder of 11 when divided by 12, is not a perfect square, and x > y, then n is prime
-                if(i > j && k <= n && k % 12 == 11) {
+                if(i > l && k <= n && k % 12 == 11) {
                     primes_[k] = !primes_[k]; // Flip the value of k
-                }
+                } 
+                l += 2;
             }
+            
         }
 
         // Remove perfect squares
@@ -196,9 +191,7 @@ int main() {
     std::string sieve;
     std::cout << "Input search range: "; // Prints message to terminal
     std::cin >> limit; // Set limit to user input
-    std::cout << "Select sieve(soe/soa/auto): ";
-    std::cin >> sieve;
-    Prime101 prime(limit, sieve); // Initalize Prime101 with input(limit)
+    Prime101 prime(limit); // Initalize Prime101 with input(limit)
     prime.end_timer();
     std::cout << "Would you like to see a list if the primes found(y/n)? ";
     std::string yn;
